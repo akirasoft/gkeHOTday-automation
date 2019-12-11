@@ -58,7 +58,7 @@ RUN rm -rf ${CLI_VERSION}_keptn.tar.gz
 RUN keptn version
 
 WORKDIR /usr/keptn
-COPY *.sh /usr/keptn/scripts
+COPY *.sh /usr/keptn/scripts/
 
 # Start the app
 CMD tail -f /dev/null
