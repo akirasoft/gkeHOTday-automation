@@ -7,6 +7,7 @@ Inside container, get auth'd to gcloud:
 gcloud auth login --no-launch-browser
 
 create clusters as follows:
+cd scripts
 ./cluster-create-wrapper.sh <class-name> <number of clusters>
 
 Clusters will be created in the format of classname and a sequential number

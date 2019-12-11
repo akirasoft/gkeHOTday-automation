@@ -92,6 +92,8 @@ CURRENT_CONTEXT=$(kubectl config current-context)
 CURRENT_CLUSTER=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"${CURRENT_CONTEXT}\"})].context.cluster}")
 CURRENT_CLUSTER_ADDR=$(kubectl config view -o jsonpath="{.clusters[?(@.name == \"${CURRENT_CLUSTER}\"})].cluster.server}")
 
+KUBECONFIGFILENAME="${CLUSTER_NAME}-kubeconfig"
+
 cat > kubeconfig <<EOF
 apiVersion: v1
 clusters:
@@ -113,5 +115,5 @@ users:
     client-certificate-data: $(cat server.crt | base64 ${BASE64_WRAP_FLAG})
     client-key-data: $(cat server-key.pem | base64 ${BASE64_WRAP_FLAG})
 EOF
-
+mv kubeconfig ${KUBECONFIGFILENAME}
 popd
