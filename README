@@ -1,0 +1,18 @@
+Automation for standing up GKE clusters for 2020 HOT days
+
+run the container as follows:
+ docker run -d -t --rm --name gkeautomation mvilliger/gkehotday-automation:0.1 && docker exec -it gkeautomation /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
+
+Inside container, get auth'd to gcloud:
+gcloud auth login --no-launch-browser
+
+create clusters as follows:
+./cluster-create-wrapper.sh <class-name> <number of clusters>
+
+Clusters will be created in the format of classname and a sequential number
+
+a Kubeconfig for each cluster will be generated in the build folder on the container. 
+
+If you would like each user's bastion to only be able to login to the respective cluster, copy the cluster's kubeconfig to the bastion
+
+If you would like the ability to easily switch between clusters via kubectl config use-context you can append all the kubeconfigs to one file
