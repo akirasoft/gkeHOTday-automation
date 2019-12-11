@@ -28,7 +28,7 @@
 # Produce CSR request first
 
 CLUSTER_NAME=$1
-
+USERNAME="teleport-${CLUSTER_NAME}"
 set -eu -o pipefail
 
 # Set OS specific values.
@@ -104,13 +104,13 @@ clusters:
 contexts:
 - context:
     cluster: ${CLUSTER_NAME}
-    user: teleport
+    user: ${USERNAME}
   name: ${CLUSTER_NAME}
 current-context: ${CLUSTER_NAME}
 kind: Config
 preferences: {}
 users:
-- name: teleport
+- name: ${USERNAME}
   user:
     client-certificate-data: $(cat server.crt | base64 ${BASE64_WRAP_FLAG})
     client-key-data: $(cat server-key.pem | base64 ${BASE64_WRAP_FLAG})

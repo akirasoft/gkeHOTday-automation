@@ -17,3 +17,9 @@ a Kubeconfig for each cluster will be generated in the build folder on the conta
 If you would like each user's bastion to only be able to login to the respective cluster, copy the cluster's kubeconfig to the bastion
 
 If you would like the ability to easily switch between clusters via kubectl config use-context you can append all the kubeconfigs to one file
+
+cp $HOME/.kube/config $HOME/.kube/config.backup.$(date +%Y-%m-%d.%H:%M:%S)
+KUBECONFIG= $HOME/.kube/config:file2: kubectl config view --merge --flatten > \
+~/.kube/merged_kubeconfig && mv ~/.kube/merged_kubeconfig ~/.kube/config
+kubectl get pods --context=cluster-1
+kubectl get pods --context=cluster-2
