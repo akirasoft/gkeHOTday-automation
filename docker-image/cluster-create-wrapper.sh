@@ -15,7 +15,7 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
     ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} 
     # get-kubeconfig creates and uploads cert to remove gcloud pre-req for k8s auth
     # creates kubeconfig file in build dir
-    sleep 5
+    sleep 60
     kubectl cluster-info
     ./get-kubeconfig.sh ${CLUSTER_NAME}
 done
