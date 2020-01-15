@@ -20,7 +20,7 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
     # get-kubeconfig creates and uploads cert to remove gcloud pre-req for k8s auth
     # creates kubeconfig file in build dir
     # when 4 ocntainers are ready, begin kubeconfig creation
-    until [[ kubectl get pods -n kube-system -l k8s-app=kube-dns -o jsonpath='{.items[*].status.phase}' == "Ready" ]];
+    until [[ $(kubectl get pods -n kube-system -l k8s-app=kube-dns -o jsonpath='{.items[*].status.phase}') == "Running" ]];
     do
         echo "cluster still provisioning, waiting 30 seconds"
         sleep 30
