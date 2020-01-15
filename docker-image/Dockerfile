@@ -44,7 +44,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 RUN apt-get update -qq && apt-get install -qqy google-cloud-sdk --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
-mkdir /usr/gkeauto
+RUN mkdir /usr/gkeauto
 
 WORKDIR /usr/gkeauto
 COPY *.sh /usr/gkeauto/scripts/
