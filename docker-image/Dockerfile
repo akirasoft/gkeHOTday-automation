@@ -61,4 +61,4 @@ WORKDIR /usr/keptn
 COPY *.sh /usr/keptn/scripts/
 
 # Start the app
-CMD tail -f /dev/null
+CMD ["/bin/bash"]
