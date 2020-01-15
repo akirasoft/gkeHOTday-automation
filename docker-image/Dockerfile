@@ -44,21 +44,5 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 RUN apt-get update -qq && apt-get install -qqy google-cloud-sdk --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
-######################################################################
-# Keptn CLI
-######################################################################
-ARG CLI_VERSION=0.6.0.beta2
-ARG CLI_DISTRO=linux
-#https://github.com/keptn/keptn/releases/download/0.6.0.beta2/0.6.0.beta2_keptn-linux.tar.gz
-RUN curl -L https://github.com/keptn/keptn/releases/download/${CLI_VERSION}/${CLI_VERSION}_keptn-${CLI_DISTRO}.tar.gz --output ${CLI_VERSION}_keptn.tar.gz
-RUN tar -C /tmp -xf ${CLI_VERSION}_keptn.tar.gz
-RUN chmod +x /tmp/keptn
-RUN mv /tmp/keptn /usr/local/bin/keptn
-RUN rm -rf ${CLI_VERSION}_keptn.tar.gz
-RUN keptn version
-
-WORKDIR /usr/keptn
-COPY *.sh /usr/keptn/scripts/
-
 # Start the app
 CMD ["/bin/bash"]
