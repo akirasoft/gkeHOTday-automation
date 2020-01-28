@@ -8,24 +8,44 @@ PROJECT=perform-vegas-hd-2020
 ZONE=us-central1-a
 REGION=us-central1
 GKE_VERSION="1.13.11-gke.14"
+echo "Configuring gcloud auth for Project=${PROJECT} and Zone=${ZONE}"
+gcloud --quiet config set project $PROJECT
+gcloud --quiet config set compute/zone $ZONE
+echo ""
 echo "will create ${NUM_OF_CLUSTERS} clusters with the prefix ${CLUSTER_PREFIX}"
 for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
-    # cluster-create.sh creates the cluster
+    # checks for existence of cluster, if it does not exist it will be created
     CLUSTER_NAME="${CLUSTER_PREFIX}${i}"
-    ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} 
+    echo "Checking for existence of cluster ${CLUSTER_NAME}"
+    CLUSTER_STATUS=$(gcloud container clusters list --format="value(status)" --filter="name=${CLUSTER_NAME}")
+    if [ -n "${CLUSTER_STATUS}" ]
+    then
+        echo "Cluster ${CLUSTER_NAME} exists with status ${CLUSTER_STATUS}, does not need to be created"
+    else
+        echo "Cluster ${CLUSTER_NAME} does not exist and will be created"
+        ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} 
+    fi
 done
-# need second logic block for kubeconfig generation so we don't have to wait inline for all the clusters
+# need second logic block for kubeconfig generation so we don't have to wait inline for all the clusters to finish provisioning
 for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
     CLUSTER_NAME="${CLUSTER_PREFIX}${i}"
-    kubectl config use-context gke_${PROJECT}_${ZONE}_${CLUSTER_PREFIX}${i}
-    # get-kubeconfig creates and uploads cert to remove gcloud pre-req for k8s auth
-    # creates kubeconfig file in build dir
-    # when 4 ocntainers are ready, begin kubeconfig creation
-    until [[ $(kubectl get pods -n kube-system -l k8s-app=kube-dns -o jsonpath='{.items[*].status.phase}') == "Running" ]];
-    do
-        echo "cluster still provisioning, waiting 30 seconds"
-        sleep 30
-    done
-    echo "cluster created, now enabling access"
-    ./get-kubeconfig.sh ${CLUSTER_NAME}
+    KUBECONFIGFILENAME="${CLUSTER_NAME}-kubeconfig"
+    if [ -f "build/${KUBECONFIGFILENAME}" ]
+    then
+        echo "File ${KUBECONFIGFILENAME} exists, for server $(yq r build/${KUBECONFIGFILENAME} clusters.[0].cluster.server), skipping"
+    else
+        kubectl config use-context gke_${PROJECT}_${ZONE}_${CLUSTER_PREFIX}${i}
+        # get-kubeconfig creates and uploads cert to remove gcloud pre-req for k8s auth
+        # creates kubeconfig file in build dir
+        # when 4 ocntainers are ready, begin kubeconfig creation
+        until [[ $(kubectl get pods -n kube-system -l k8s-app=kube-dns -o jsonpath='{.items[*].status.phase}') == "Running" ]];
+        do
+            echo "kube-dns for ${CLUSTER_NAME} still provisioning, waiting 30 seconds"
+            sleep 15
+        done
+        echo "cluster ${CLUSTER_NAME} created, now enabling access"
+        ./get-kubeconfig.sh ${CLUSTER_NAME} ${KUBECONFIGFILENAME}
+    fi
+    echo ""
+
 done

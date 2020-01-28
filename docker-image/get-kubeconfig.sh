@@ -28,6 +28,7 @@
 # Produce CSR request first
 
 CLUSTER_NAME=$1
+KUBECONFIGFILENAME=$2
 USERNAME="teleport-${CLUSTER_NAME}"
 set -eu -o pipefail
 
@@ -91,8 +92,6 @@ kubectl -n kube-system exec $(kubectl get pods -n kube-system -l k8s-app=kube-dn
 CURRENT_CONTEXT=$(kubectl config current-context)
 CURRENT_CLUSTER=$(kubectl config view -o jsonpath="{.contexts[?(@.name == \"${CURRENT_CONTEXT}\"})].context.cluster}")
 CURRENT_CLUSTER_ADDR=$(kubectl config view -o jsonpath="{.clusters[?(@.name == \"${CURRENT_CLUSTER}\"})].cluster.server}")
-
-KUBECONFIGFILENAME="${CLUSTER_NAME}-kubeconfig"
 
 cat > kubeconfig <<EOF
 apiVersion: v1
