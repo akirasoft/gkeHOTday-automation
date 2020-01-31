@@ -1,7 +1,7 @@
 Automation for standing up GKE clusters for 2020 HOT days
 
 run the container as follows:
- docker run -d -t --rm --name gkeautomation mvilliger/gkehotday-automation:0.3 && docker exec -it gkeautomation /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
+ docker run -d -t --rm --name gkeautomation mvilliger/gkehotday-automation:0.4 && docker exec -it gkeautomation /bin/sh -c "[ -e /bin/bash ] && /bin/bash || /bin/sh"
 
 Inside container, get auth'd to gcloud:
 gcloud auth login --no-launch-browser

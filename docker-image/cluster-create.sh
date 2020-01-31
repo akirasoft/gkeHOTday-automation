@@ -26,15 +26,10 @@ gcloud beta container --project $PROJECT clusters create --async $CLUSTER_NAME \
     --enable-ip-alias \
     --network "projects/$PROJECT/global/networks/default" \
     --create-subnetwork name=$CLUSTER_NAME \
-    --subnetwork "projects/$PROJECT/regions/$REGION/subnetworks/default" \
     --default-max-pods-per-node "64" \
     --addons HorizontalPodAutoscaling,HttpLoadBalancing \
     --no-enable-autoupgrade
 
-echo "Cluster provisioning done"
+echo "Cluster provisioning command done, cluster will continue provisioning in the background"
 
-echo "get the credentials to the cluster"
-gcloud container clusters get-credentials $CLUSTER_NAME \
-            --zone $ZONE \
-            --project $PROJECT
 

@@ -40,11 +40,18 @@ done
 for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
     CLUSTER_NAME="${CLUSTER_PREFIX}${i}"
     KUBECONFIGFILENAME="${CLUSTER_NAME}-kubeconfig"
+    until [[ $(gcloud container clusters list --format="value(status)" --filter="name=${CLUSTER_NAME}") == "RUNNING" ]];
+    do
+        CLUSTER_STATUS=$(gcloud container clusters list --format="value(status)" --filter="name=${CLUSTER_NAME}")
+        echo "Status for ${CLUSTER_NAME} is ${CLUSTER_STATUS}, waiting 30 seconds"
+        sleep 30
+    done
     if [ -f "build/${KUBECONFIGFILENAME}" ]
     then
         echo "File ${KUBECONFIGFILENAME} exists, for server $(yq r build/${KUBECONFIGFILENAME} clusters.[0].cluster.server), skipping"
     else
-        gcloud container clusters get-credentials ${CLUSTER_NAME}
+        CLUSTER_ZONE=$(gcloud container clusters list --format="value(zone)" --filter="name=${CLUSTER_NAME}")
+        gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${CLUSTER_ZONE}
         #kubectl config use-context gke_${PROJECT}_${ZONE}_${CLUSTER_PREFIX}${i}
         # get-kubeconfig creates and uploads cert to remove gcloud pre-req for k8s auth
         # creates kubeconfig file in build dir
