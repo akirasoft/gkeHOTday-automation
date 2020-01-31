@@ -23,7 +23,15 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
         echo "Cluster ${CLUSTER_NAME} exists with status ${CLUSTER_STATUS}, does not need to be created"
     else
         echo "Cluster ${CLUSTER_NAME} does not exist and will be created"
-        ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} 
+        if [ $i -le 35 ]
+        then
+            ZONE=us-central1-b
+            REGION=us-central1
+            ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION}
+        else
+            ZONE=us-central1-c
+            REGION=us-central1
+            ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION}
     fi
 done
 # need second logic block for kubeconfig generation so we don't have to wait inline for all the clusters to finish provisioning
