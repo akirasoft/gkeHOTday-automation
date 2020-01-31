@@ -18,10 +18,11 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
     CLUSTER_NAME="${CLUSTER_PREFIX}${i}"
     echo "Checking for existence of cluster ${CLUSTER_NAME}"
     CLUSTER_STATUS=$(gcloud container clusters list --format="value(status)" --filter="name=${CLUSTER_NAME}")
+    CLUSTER_ZONE=$(gcloud container clusters list --format="value(zone)" --filter="name=${CLUSTER_NAME}")
     if [ -n "${CLUSTER_STATUS}" ]
     then
-        echo "Cluster ${CLUSTER_NAME} exists with status ${CLUSTER_STATUS}, will delete"
-        gcloud --quiet container clusters delete --async ${CLUSTER_NAME}
+        echo "Cluster ${CLUSTER_NAME} exists with status ${CLUSTER_STATUS} in zone ${CLUSTER_ZONE}, will delete"
+        gcloud --quiet container clusters delete --async ${CLUSTER_NAME} --zone ${CLUSTER_ZONE}
     else
         echo "Cluster ${CLUSTER_NAME} does not exist and will not be deleted"
     fi
