@@ -14,6 +14,15 @@ echo "Provisioning cluster"
 gcloud --quiet config set container/cluster $CLUSTER_NAME
 gcloud beta container --project $PROJECT clusters create $CLUSTER_NAME --zone $ZONE --no-enable-basic-auth --cluster-version $GKE_VERSION --machine-type "n1-standard-8" --image-type "UBUNTU" --disk-type "pd-standard" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes "1" --enable-ip-alias --network "projects/$PROJECT/global/networks/default" --subnetwork "projects/$PROJECT/regions/$REGION/subnetworks/default" --default-max-pods-per-node "64" --addons HorizontalPodAutoscaling,HttpLoadBalancing --no-enable-autoupgrade
 
+# example if subnet creation is necessary:
+# gcloud container clusters create --async CLUSTER_NAME \
+#     --region=REGION \
+#     --enable-ip-alias \
+#     --create-subnetwork name=SUBNET_NAME,range=NODE_IP_RANGE \
+#     --cluster-ipv4-cidr=POD_IP_RANGE \
+#     --services-ipv4-cidr=SERVICES_IP_RANGE
+
+
 echo "Cluster provisioning done"
 
 echo "get the credentials to the cluster"

@@ -33,6 +33,7 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
             REGION=us-central1
             ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION}
         fi
+        sleep 5
     fi
 done
 # need second logic block for kubeconfig generation so we don't have to wait inline for all the clusters to finish provisioning
