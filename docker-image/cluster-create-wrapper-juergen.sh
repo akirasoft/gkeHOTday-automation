@@ -28,6 +28,7 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
         if [ $i -gt 35 ]
         then
             if [ $i -ge 70 ]
+            then
                 # 71-105
                 ZONE=us-west2-c
                 REGION=us-west2
