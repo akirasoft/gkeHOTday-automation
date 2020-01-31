@@ -21,7 +21,7 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
     if [ -n "${CLUSTER_STATUS}" ]
     then
         echo "Cluster ${CLUSTER_NAME} exists with status ${CLUSTER_STATUS}, will delete"
-        gcloud container clusters delete ${CLUSTER_NAME}
+        gcloud --quiet container clusters delete --async ${CLUSTER_NAME}
     else
         echo "Cluster ${CLUSTER_NAME} does not exist and will not be deleted"
     fi
