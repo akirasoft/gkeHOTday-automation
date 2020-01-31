@@ -44,7 +44,8 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
     then
         echo "File ${KUBECONFIGFILENAME} exists, for server $(yq r build/${KUBECONFIGFILENAME} clusters.[0].cluster.server), skipping"
     else
-        kubectl config use-context gke_${PROJECT}_${ZONE}_${CLUSTER_PREFIX}${i}
+        gcloud container clusters get-credentials ${CLUSTER_NAME}
+        #kubectl config use-context gke_${PROJECT}_${ZONE}_${CLUSTER_PREFIX}${i}
         # get-kubeconfig creates and uploads cert to remove gcloud pre-req for k8s auth
         # creates kubeconfig file in build dir
         # when 4 ocntainers are ready, begin kubeconfig creation
