@@ -7,6 +7,7 @@ NUM_OF_CLUSTERS=$2
 PROJECT=perform-vegas-hd-2020
 ZONE=us-central1-a
 REGION=us-central1
+NETWORK_PREFIX=selfhealing
 GKE_VERSION="1.13.11-gke.14"
 echo "Configuring gcloud auth for Project=${PROJECT} and Zone=${ZONE}"
 gcloud --quiet config set project $PROJECT
@@ -30,18 +31,21 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
                 # 71-105
                 ZONE=us-west2-c
                 REGION=us-west2
-                ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} ${CLUSTER_PREFIX}2
+                NETWORK=${NETWORK_PREFIX}2
+                ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} ${NETWORK}
             else
                 # 35-70
                 ZONE=us-west2-b
                 REGION=us-west2
-                ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} ${CLUSTER_PREFIX}3
+                NETWORK=${NETWORK_PREFIX}3
+                ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} ${NETWORK}
             fi
         else
             #1-35
             ZONE=us-west2-a
             REGION=us-west2
-            ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} ${CLUSTER_PREFIX}1
+            NETWORK=${NETWORK_PREFIX}1
+            ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} ${NETWORK}
         fi
         sleep 5
     fi
