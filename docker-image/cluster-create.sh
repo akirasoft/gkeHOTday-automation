@@ -9,6 +9,7 @@ CLUSTER_NAME=$2
 ZONE=$3
 REGION=$4
 GKE_VERSION=$5
+NETWORK=$6
 
 echo "Provisioning cluster"
 gcloud --quiet config set container/cluster $CLUSTER_NAME
@@ -24,8 +25,10 @@ gcloud beta container --project $PROJECT clusters create --async $CLUSTER_NAME \
     --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
     --num-nodes "1" \
     --enable-ip-alias \
-    --network "projects/$PROJECT/global/networks/default" \
-    --create-subnetwork name=$CLUSTER_NAME \
+    --network "projects/$PROJECT/global/networks/$NETWORK" \
+    --create-subnetwork name=$CLUSTER_NAME,range=/21 \
+    --cluster-ipv4-cidr=/21 \
+    --services-ipv4-cidr=/21 \
     --default-max-pods-per-node "64" \
     --addons HorizontalPodAutoscaling,HttpLoadBalancing \
     --no-enable-autoupgrade

@@ -18,6 +18,7 @@ RUN apt-get update -qq && \
     git \
     gnupg \
     jq \
+    openssh-client \
     uuid \
     vim \
     wget \

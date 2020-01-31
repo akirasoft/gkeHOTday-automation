@@ -27,11 +27,11 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
         then
             ZONE=us-central1-b
             REGION=us-central1
-            ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION}
+            ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} ${CLUSTER_PREFIX}
         else
             ZONE=us-central1-c
             REGION=us-central1
-            ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION}
+            ./cluster-create.sh ${PROJECT} ${CLUSTER_NAME} ${ZONE} ${REGION} ${GKE_VERSION} ${CLUSTER_PREFIX}
         fi
         sleep 5
     fi
