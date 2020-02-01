@@ -57,9 +57,14 @@ for ((i=1;i<=NUM_OF_CLUSTERS;i++)); do
     KUBECONFIGFILENAME="${CLUSTER_NAME}-kubeconfig"
     until [[ $(gcloud container clusters list --format="value(status)" --filter="name=${CLUSTER_NAME}") == "RUNNING" ]];
     do
+        if [[$(gcloud container clusters list --format="value(status)" --filter="name=${CLUSTER_NAME}") == "ERROR" ]]
+        then
+            break
+        fi
         CLUSTER_STATUS=$(gcloud container clusters list --format="value(status)" --filter="name=${CLUSTER_NAME}")
         echo "Status for ${CLUSTER_NAME} is ${CLUSTER_STATUS}, waiting 30 seconds"
         sleep 30
+
     done
     if [ -f "build/${KUBECONFIGFILENAME}" ]
     then
